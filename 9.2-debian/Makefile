@@ -1,5 +1,13 @@
+TAG      := 9.2-debian
+IMAGE    := panubo/postgres
+REGISTRY := docker.io
+
 build:
-	docker build -t docker.io/panubo/postgres:9.2-debain .
+	docker build --pull -t $(IMAGE):$(TAG) .
+
+run:
+	docker run --rm -it $(IMAGE):$(TAG)
 
 push:
-	docker push docker.io/panubo/postgres:9.2-debian
+	docker tag $(IMAGE):$(TAG) $(REGISTRY)/$(IMAGE):$(TAG)
+	docker push $(REGISTRY)/$(IMAGE):$(TAG)
