@@ -6,7 +6,7 @@ set -e
 BACKUP_PATH=/srv/pg_dump
 BACKUP_DIR="${BACKUP_PATH}/$(date +%Y%m%d%H%M%S)"
 
-PG_BIN=/usr/lib/postgresql/9.6/bin
+PG_BIN=/usr/lib/postgresql/9.4/bin
 
 # Configs
 DBS=$(su -l postgres -c "${PG_BIN}/psql -At -c \"SELECT datname FROM pg_database WHERE NOT datistemplate\"")
