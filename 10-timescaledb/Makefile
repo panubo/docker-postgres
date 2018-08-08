@@ -1,4 +1,4 @@
-TAG      := 10.4-debian
+TAG      := 10-timescaledb
 IMAGE    := panubo/postgres
 REGISTRY := docker.io
 
