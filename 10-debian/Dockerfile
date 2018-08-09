@@ -29,9 +29,12 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-COPY locale.gen /etc/locale.gen
+COPY etc/* /etc/
 RUN locale-gen
 
-COPY dump.sh /dump.sh
-COPY backup.sh /backup.sh
-COPY configure-extensions.sh /docker-entrypoint-initdb.d/
+COPY bin/* /
+COPY docker-initdb/* /docker-entrypoint-initdb.d/
+COPY entry-init/* /entry-init.d/
+
+ENTRYPOINT ["/entry.sh", "docker-entrypoint.sh"]
+CMD ["postgres"]

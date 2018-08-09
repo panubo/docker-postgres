@@ -9,7 +9,7 @@ EXTENSIONS=(${TIMESCALEDB} ${REPMGR})
 EXTENSIONS=$(echo ${EXTENSIONS[*]} | sed -e 's@ @,@g')
 
 if [ "${EXTENSIONS}" == "" ]; then
-  echo "No extensions to configure."
+  echo "Info: No extensions to configure" && exit 0
 else
   echo "Configuring extensions... ${EXTENSIONS}"
   sed -i -e "s@^#shared_preload_libraries.*@shared_preload_libraries = '${EXTENSIONS}'@g" /var/lib/postgresql/data/postgresql.conf
