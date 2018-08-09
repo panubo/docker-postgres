@@ -38,3 +38,6 @@ COPY entry-init/* /entry-init.d/
 
 ENTRYPOINT ["/entry.sh", "docker-entrypoint.sh"]
 CMD ["postgres"]
+
+# Fix https://github.com/docker-library/postgres/issues/478
+RUN usermod -d /var/lib/postgresql -s /bin/bash postgres
