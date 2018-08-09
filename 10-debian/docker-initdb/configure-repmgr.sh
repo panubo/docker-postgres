@@ -2,8 +2,9 @@
 
 set -e
 
-: ${REPMGR_USER:='repmgr'}
+[ "${REPMGR_ENABLED}" == "true" ] || { echo "Info: REPMGR_ENABLED false"; exit 0; }
 [ -z "$REPMGR_PASSWORD" ] && { echo "Error: REPMGR_PASSWORD not set"; exit 128; }
+: ${REPMGR_USER:='repmgr'}
 : ${REPMGR_DB:='repmgr'}
 
 createuser -s ${REPMGR_USER}
