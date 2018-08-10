@@ -1,4 +1,4 @@
-TAG      := 9.6-debian
+TAG      := $(shell basename ${PWD})
 IMAGE    := panubo/postgres
 REGISTRY := docker.io
 
@@ -6,7 +6,10 @@ build:
 	docker build --pull -t $(IMAGE):$(TAG) .
 
 run:
-	docker run --rm -it $(IMAGE):$(TAG)
+	docker run --rm -it --name $(TAG)-run $(IMAGE):$(TAG)
+
+shell:
+	docker run --rm -it --name $(TAG)-shell $(IMAGE):$(TAG) bash
 
 push:
 	docker tag $(IMAGE):$(TAG) $(REGISTRY)/$(IMAGE):$(TAG)
