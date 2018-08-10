@@ -41,7 +41,6 @@
 # NOTE that the basename of %p will be different from %f; do not
 # expect them to be interchangeable.
 #
-#restore_command = ''		# e.g. 'cp /mnt/server/archivedir/%f %p'
 restore_command = 'cp /srv/pg_log_archive/%f %p'
 #
 #
