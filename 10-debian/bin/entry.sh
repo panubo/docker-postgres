@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# Allow running early init scripts as root following similar convention
+# as upstream docker image
+
 set -e
 
-# Allow running init scripts as root following same convention
-# as upstream docker image
 for f in /entry-init.d/*; do
   case "$f" in
     *.sh)

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Initialise database with repmgr extension and configure pg_hba.conf
+# to allow authenticated connection from repmgr
+
 set -e
 
 [ "${REPMGR_ENABLED}" == "true" ] || { echo "Info: REPMGR_ENABLED false"; exit 0; }

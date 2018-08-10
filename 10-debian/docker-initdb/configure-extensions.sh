@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Enable postgres extensions as required.
+
 set -e
 
 # comma separated list of extensions to load
