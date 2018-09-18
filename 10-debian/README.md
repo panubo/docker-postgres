@@ -1,7 +1,7 @@
 # PostgreSQL 10 w/ TimescaleDB and Repmgr
 
-This builds upon the offical PostgreSQL 10 image and adds TimescaleDB and
-Repmgr extensions.
+This builds upon the offical PostgreSQL 10 image and adds TimescaleDB, PostGIS
+and Repmgr extensions.
 
 ## Extension Configuration
 
