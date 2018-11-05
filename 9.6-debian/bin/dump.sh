@@ -12,7 +12,7 @@ BACKUP_DIR="${BACKUP_PATH}/$(date +%Y%m%d%H%M%S)"
 [ ! -d "${BACKUP_PATH}" ] && { echo "Error: ${BACKUP_PATH} does not exist"; exit 128; }
 
 # configs
-PG_BIN=/usr/lib/postgresql/10/bin
+PG_BIN=/usr/lib/postgresql/9.6/bin
 DBS=$(su -l postgres -c "${PG_BIN}/psql -At -c \"SELECT datname FROM pg_database WHERE NOT datistemplate\"")
 mkdir -p "${BACKUP_DIR}" ${BACKUP_PATH}/latest
 
