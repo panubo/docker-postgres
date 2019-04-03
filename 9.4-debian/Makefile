@@ -1,5 +1,5 @@
 GIT_ROOT := $(shell git rev-parse --show-toplevel)
-TAG      := $(shell echo $(CURDIR) | sed -E -e 's|$(GIT_ROOT)/||' -e 's|/|-|g')
+TAG      := $(shell echo $(CURDIR) | sed -E -e 's | $(GIT_ROOT)/||' -e 's|/|-|g')
 IMAGE    := panubo/postgres
 REGISTRY := docker.io
 
@@ -12,3 +12,7 @@ run:
 push:
 	docker tag $(IMAGE):$(TAG) $(REGISTRY)/$(IMAGE):$(TAG)
 	docker push $(REGISTRY)/$(IMAGE):$(TAG)
+
+clean:
+	docker rmi $(IMAGE):$(TAG)
+	docker rmi $(REGISTRY)/$(IMAGE):$(TAG)
