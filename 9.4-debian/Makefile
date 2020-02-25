@@ -14,5 +14,5 @@ push:
 	docker push $(REGISTRY)/$(IMAGE):$(TAG)
 
 clean:
-	docker rmi $(IMAGE):$(TAG)
-	docker rmi $(REGISTRY)/$(IMAGE):$(TAG)
+	docker rmi $(IMAGE):$(TAG) || true
+	docker rmi $(REGISTRY)/$(IMAGE):$(TAG) || true
