@@ -22,7 +22,9 @@ RUN apt-get update \
   && ./bootstrap -DREGRESS_CHECKS=OFF && cd build && make && make install \
   && apt-get -y remove curl cmake clang-format-7 libssl-dev postgresql-server-dev-${PG_MAJOR} \
   && apt-get -y autoremove && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* ${DIR}
+  && rm -rf /var/lib/apt/lists/* ${DIR} \
+  && sed -r -i "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = 'timescaledb,\2'/;s/,'/'/" /usr/share/postgresql/postgresql.conf.sample \
+  ;
 
 # Install Repmgr extension
 RUN apt-get update \
