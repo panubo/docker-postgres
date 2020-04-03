@@ -14,5 +14,5 @@ if [ "${EXTENSIONS}" == "" ]; then
   echo "Info: No extensions to configure" && exit 0
 else
   echo "Configuring extensions... ${EXTENSIONS}"
-  sed -i -e "s@^#shared_preload_libraries.*@shared_preload_libraries = '${EXTENSIONS}'@g" "${PGDATA:-/var/lib/postgresql}/data/postgresql.conf"
+  sed -i -e "s@^#shared_preload_libraries.*@shared_preload_libraries = '${EXTENSIONS}'@g" "${PGDATA:-/var/lib/postgresql/data}/postgresql.conf"
 fi
