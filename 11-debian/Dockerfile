@@ -2,6 +2,7 @@ FROM docker.io/postgres:11
 
 ENV POSTGIS_MAJOR=2.5
 ENV TIMESCALEDB_VERSION=1.6.1 TIMESCALEDB_SHA256=da0f9a6f36195392bbff7346c89a28c42a90762f4f5603443975887f781ecef6
+ENV WALG_VERSION=0.2.15 WALG_SHA256=ea33c2341d7bfb203c6948590c29834c013ab06a28c7a2b236a73d906f785c84
 
 # Install PostGIS extension
 RUN apt-get update \
@@ -33,6 +34,19 @@ RUN apt-get update \
   && apt-get -y install postgresql-${PG_MAJOR}-repmgr \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+RUN set -x \
+  && DIR=$(mktemp -d) && cd ${DIR} \
+  && apt-get update \
+  && apt-get -y install curl \
+  && curl -sSf -L https://github.com/wal-g/wal-g/releases/download/v${WALG_VERSION}/wal-g.linux-amd64.tar.gz -o wal-g.linux-amd64.tar.gz \
+  && echo "${WALG_SHA256}  wal-g.linux-amd64.tar.gz" | sha256sum -c - \
+  && tar -xzf wal-g.linux-amd64.tar.gz \
+  && cp wal-g /usr/local/bin/wal-g \
+  && apt-get --purge autoremove -y curl \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* ${DIR} \
+  ;
 
 # Install rsync for backup.sh
 RUN apt-get update \

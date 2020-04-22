@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+gosu postgres wal-g backup-push ${PGDATA:-/var/lib/postgres/data}
