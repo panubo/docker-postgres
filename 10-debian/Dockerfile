@@ -1,7 +1,9 @@
+FROM panubo/postgres:10-debian as oldversions
+
 FROM docker.io/postgres:10
 
-ENV POSTGIS_MAJOR=2.4
-ENV TIMESCALEDB_VERSION=1.1.1 TIMESCALEDB_SHA256=c2f0f745f9ab52bf7fedd24e129efde5f39a0f27a8f41e1568aab98cd21d5a68
+ENV POSTGIS_MAJOR=2.5
+ENV TIMESCALEDB_VERSION=1.6.1 TIMESCALEDB_SHA256=da0f9a6f36195392bbff7346c89a28c42a90762f4f5603443975887f781ecef6
 
 # Install lsb-release
 RUN apt-get update \
@@ -11,7 +13,7 @@ RUN apt-get update \
 
 # Install PostGIS extension
 RUN apt-get update \
-  && apt-get -y install --no-install-recommends postgresql-${PG_MAJOR}-postgis-${POSTGIS_MAJOR} postgresql-${PG_MAJOR}-postgis-${POSTGIS_MAJOR}-scripts postgis \
+  && apt-get -y install --no-install-recommends postgresql-${PG_MAJOR}-postgis-${POSTGIS_MAJOR} postgresql-${PG_MAJOR}-postgis-${POSTGIS_MAJOR}-scripts \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -28,7 +30,9 @@ RUN apt-get update \
   && ./bootstrap -DREGRESS_CHECKS=OFF && cd build && make && make install \
   && apt-get -y remove curl cmake clang-format-7 libssl-dev postgresql-server-dev-${PG_MAJOR} \
   && apt-get -y autoremove && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* ${DIR}
+  && rm -rf /var/lib/apt/lists/* ${DIR} \
+  && sed -r -i "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = 'timescaledb,\2'/;s/,'/'/" /usr/share/postgresql/postgresql.conf.sample \
+  ;
 
 # Install Repmgr extension
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
@@ -52,3 +56,13 @@ COPY entry-init/* /entry-init.d/
 
 ENTRYPOINT ["/entry.sh", "docker-entrypoint.sh"]
 CMD ["postgres"]
+
+COPY --from=oldversions /usr/lib/postgresql/10/lib/timescaledb-*.so /usr/lib/postgresql/10/lib/
+COPY --from=oldversions /usr/share/postgresql/10/extension/timescaledb--*.sql /usr/share/postgresql/10/extension/
+
+COPY --from=oldversions /usr/lib/postgresql/10/lib/postgis-*.so /usr/lib/postgresql/10/lib/
+COPY --from=oldversions /usr/lib/postgresql/10/lib/postgis_topology-*.so /usr/lib/postgresql/10/lib/
+COPY --from=oldversions /usr/share/postgresql/10/extension/postgis--*.sql /usr/share/postgresql/10/extension/
+COPY --from=oldversions /usr/share/postgresql/10/extension/postgis_sfcgal--*.sql /usr/share/postgresql/10/extension/
+COPY --from=oldversions /usr/share/postgresql/10/extension/postgis_tiger_geocoder--*.sql /usr/share/postgresql/10/extension/
+COPY --from=oldversions /usr/share/postgresql/10/extension/postgis_topology--*.sql /usr/share/postgresql/10/extension/
