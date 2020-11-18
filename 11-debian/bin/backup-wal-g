@@ -2,4 +2,4 @@
 
 set -e
 
-gosu postgres wal-g backup-push ${PGDATA:-/var/lib/postgres/data}
+gosu postgres wal-g backup-push "${PGDATA:-/var/lib/postgres/data}"

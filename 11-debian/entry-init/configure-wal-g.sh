@@ -9,7 +9,7 @@ if [[ "${WALG_ENABLED:-}" != "true" ]]; then
 fi
 
 if [[ -n "${AWS_ENDPOINT:-}" ]] && [[ "${AWS_S3_FORCE_PATH_STYLE:-}" != "true" ]]; then
-  echo "WARNING: looks like you are using a custom AWS_ENDPOINT by AWS_S3_FORCE_PATH_STYLE is not true, this may cause wal-g to fail to connect."
+  echo "WARNING: looks like you are using a custom AWS_ENDPOINT but AWS_S3_FORCE_PATH_STYLE is not true, this may cause wal-g to fail to connect."
 fi
 
 if [[ -e "${PGDATA:-/var/lib/postgres/data}/PG_VERSION" ]]; then

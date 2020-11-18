@@ -4,6 +4,13 @@ ENV POSTGIS_MAJOR=2.5
 ENV TIMESCALEDB_VERSION=1.6.1 TIMESCALEDB_SHA256=da0f9a6f36195392bbff7346c89a28c42a90762f4f5603443975887f781ecef6
 ENV WALG_VERSION=0.2.15 WALG_SHA256=ea33c2341d7bfb203c6948590c29834c013ab06a28c7a2b236a73d906f785c84
 
+# Install some system utils
+RUN apt-get update \
+  && apt-get -y install procps \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  ;
+
 # Install PostGIS extension
 RUN apt-get update \
   && apt-get -y install --no-install-recommends postgresql-${PG_MAJOR}-postgis-${POSTGIS_MAJOR} postgresql-${PG_MAJOR}-postgis-${POSTGIS_MAJOR}-scripts postgis \
@@ -31,6 +38,7 @@ RUN apt-get update \
 RUN apt-get update \
   && apt-get -y install lsb-release \
   && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update \
   && apt-get -y install postgresql-${PG_MAJOR}-repmgr \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
