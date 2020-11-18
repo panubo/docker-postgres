@@ -20,4 +20,4 @@ finish() {
 }
 trap finish EXIT
 
-rsync -av --inplace --delete --no-whole-file --exclude pg_wal/* --exclude pg_xlog/* /var/lib/postgresql/data/ ${BACKUP_PATH}/data/
+rsync -av --inplace --delete --no-whole-file --exclude pg_wal/* --exclude pg_xlog/* "${PGDATA:-/var/lib/postgresql/data}/" ${BACKUP_PATH}/data/

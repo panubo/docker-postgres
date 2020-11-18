@@ -16,3 +16,9 @@ Repmgr extensions.
 - `REPMGR_DATA_DIRECTORY` (Default to $PGDATA)
 
 See https://repmgr.org/docs/4.0/configuration-file-settings.html
+
+## Testing
+
+```
+docker run --rm -it --name postgres96 -v $(pwd)/data:/var/lib/postgresql/data panubo/postgres:9.6-debian
+```
