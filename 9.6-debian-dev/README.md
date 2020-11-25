@@ -1,0 +1,68 @@
+# PostgreSQL 9.6 w/ TimescaleDB and Repmgr
+
+This builds upon the offical PostgreSQL 9.6 image and adds TimescaleDB and Repmgr extensions.
+
+## Environment variables
+
+### Included from upstream
+
+- `POSTGRES_PASSWORD`
+- `POSTGRES_USER`
+- `POSTGRES_DB`
+- `POSTGRES_INITDB_ARGS`
+- `POSTGRES_INITDB_WALDIR`
+- `POSTGRES_HOST_AUTH_METHOD` - **DISABLED** this env is used in the postgres upstream image but disabled in this image
+- `PGDATA`
+
+### Postgres config
+
+- `POSTGRES_MAX_CONNECTIONS` - max connections, default "100"
+- `POSTGRES_INCLUDE_IF_EXISTS` - comma separated list of additional config files to include with `include_if_exists`, default "".
+- `POSTGRES_SSL_SELF_SIGNED` - creates a self signed certificate and sets POSTGRES_SSL_CERT_FILE and POSTGRES_SSL_KEY_FILE to the new certificate.
+- `POSTGRES_SSL_CERT_FILE` - ssl_cert_file, default "".
+- `POSTGRES_SSL_KEY_FILE` - ssl_key_file, default "".
+- `POSTGRES_ENFORCE_SSL` - enforces SSL on connections, this is independent of whether ssl is on or not as an additional protection against misconfiguration.
+
+### Extension Configuration
+
+- `TIMESCALEDB_ENABLED` - enable TimescaleDB extension in the `POSTGRES_DB` database.
+- `REPMGR_ENABLED` - enable Repmgr extension, also enables setting repmgr configuration.
+
+### Repmgr Configuration
+
+- `REPMGR_NODE_ID` (Required)
+- `REPMGR_CONNINFO` (Required)
+- `REPMGR_NODE_NAME` (Defaults to hostname)
+- `REPMGR_DATA_DIRECTORY` (Default to $PGDATA)
+
+See https://repmgr.org/docs/4.0/configuration-file-settings.html
+
+### Postgres exporter
+
+[postgres_exporter](https://github.com/wrouesnel/postgres_exporter)
+
+- `POSTGRES_EXPORTER_ENABLED` - when enabled a `postgres_exporter` user is created with appropriate access for the exporter. The user is only created on db init. Run `. /docker-entrypoint-initdb.d/prometheus-exporter.sh` in the container to enable later.
+- `POSTGRES_EXPORTER_PASSWORD` - user password for postgres_exporter, default "password".
+
+### Wal-g
+
+[wal-g](https://github.com/wal-g/wal-g)
+
+- `WALG_ENABLED` - enabled wal-g
+- `WALG_S3_PREFIX` - see wal-g docs for value.
+
+If using wal-g with minio the following env vars should be set.
+
+- `AWS_ENDPOINT`
+- `AWS_S3_FORCE_PATH_STYLE`
+
+### Wal-g Recovery
+
+- `RECOVERY_WALG_S3_PREFIX` - Recovery target, same as `WALG_S3_PREFIX` but the values must NOT match.
+- `RECOVERY_CONTINUE_ON_EXISTING` - Allows recovery even if a cluster has already been initialised, use if you are restoring from a disk snapshot instead of `wal-g backup-fetch ...`
+
+## Testing
+
+```
+docker run --rm -it --name postgres96 -v $(pwd)/data:/var/lib/postgresql/data panubo/postgres:9.6-debian
+```
