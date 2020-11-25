@@ -9,7 +9,7 @@ This builds upon the offical PostgreSQL 9.6 image and adds TimescaleDB and Repmg
 - `POSTGRES_PASSWORD`
 - `POSTGRES_USER`
 - `POSTGRES_DB`
-- `POSTGRES_INITDB_ARGS`
+- `POSTGRES_INITDB_ARGS` - Specify any initdb arguments such as "--data-checksum", "--locale=en_AU.UTF-8". Default "--data-checksum" (this image turns on data checksum by default).
 - `POSTGRES_INITDB_WALDIR`
 - `POSTGRES_HOST_AUTH_METHOD` - **DISABLED** this env is used in the postgres upstream image but disabled in this image
 - `PGDATA`

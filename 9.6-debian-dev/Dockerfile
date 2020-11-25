@@ -85,6 +85,8 @@ COPY --from=tools /usr/local/bin/timescaledb-tune /usr/local/bin/timescaledb-par
 COPY --from=oldversions /usr/lib/postgresql/9.6/lib/timescaledb-*.so /usr/lib/postgresql/9.6/lib/
 COPY --from=oldversions /usr/share/postgresql/9.6/extension/timescaledb--*.sql /usr/share/postgresql/9.6/extension/
 
+ENV POSTGRES_INITDB_ARGS="--data-checksum"
+
 # COPY --from=oldversions /usr/lib/postgresql/9.6/lib/postgis-*.so /usr/lib/postgresql/9.6/lib/
 # COPY --from=oldversions /usr/lib/postgresql/9.6/lib/postgis_topology-*.so /usr/lib/postgresql/9.6/lib/
 # COPY --from=oldversions /usr/share/postgresql/9.6/extension/postgis--*.sql /usr/share/postgresql/9.6/extension/
