@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# Initialise database with repmgr extension and configure pg_hba.conf
-# to allow authenticated connection from repmgr
+# Initialise database with repmgr extension
 
 set -e
 
@@ -10,7 +9,23 @@ set -e
 : ${REPMGR_USER:='repmgr'}
 : ${REPMGR_DB:='repmgr'}
 
-createuser -s ${REPMGR_USER}
-createdb ${REPMGR_DB} -O ${REPMGR_USER}
 
-psql -c "ALTER user ${REPMGR_USER} WITH PASSWORD '${REPMGR_PASSWORD}'"
+psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" << EOF
+  CREATE OR REPLACE FUNCTION __tmp_create_user() returns void as \$$
+  BEGIN
+    IF NOT EXISTS (
+            SELECT                       -- SELECT list can stay empty for this
+            FROM   pg_catalog.pg_user
+            WHERE  usename = '${REPMGR_USER}') THEN
+      CREATE USER ${REPMGR_USER};
+    END IF;
+  END;
+  \$$ language plpgsql;
+
+  SELECT __tmp_create_user();
+  DROP FUNCTION __tmp_create_user();
+
+  ALTER USER ${REPMGR_USER} WITH PASSWORD '${REPMGR_PASSWORD}';
+EOF
+
+echo "SELECT 'CREATE DATABASE ${REPMGR_DB} OWNER ${REPMGR_USER}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${REPMGR_DB}')\gexec" | psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}"

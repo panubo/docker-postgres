@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Simple wrapper around repmgr to drop to the postgres user and set the config-file path
+
+set -e
+
+exec gosu postgres /usr/bin/repmgr --config-file /run/postgresql/repmgr.conf "${@}"

@@ -2,4 +2,6 @@
 
 set -e
 
+export PGHOST=/var/run/postgresql
+
 gosu postgres wal-g backup-push "${PGDATA:-/var/lib/postgres/data}"

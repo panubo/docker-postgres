@@ -26,10 +26,10 @@ process_entry_init_files() {
         echo "$0: ignoring $f" ;;
     esac
     echo
-  done
 
-  # Turn off error on undefined variables if it was turned on by an entry-init.d script
-  set +u
+    # Turn off error on undefined variables if it was turned on by an entry-init.d script
+    set +u
+  done
 }
 
 postgresql_conf() {
@@ -98,8 +98,17 @@ postgresql_conf() {
   # recovery_target_xid = ''
   # restore_command = 'xxx'
 
+  echo "===postgres.conf==="
   cat "${PGDATA:-/var/lib/postgresql/data}/postgresql.conf"
+  echo "===postgres.conf==="
+}
 
+docker_database_exists() {
+  declare -g DATABASE_ALREADY_EXISTS
+  # look specifically for PG_VERSION, as it is expected in the DB dir
+  if [ -s "$PGDATA/PG_VERSION" ]; then
+    DATABASE_ALREADY_EXISTS='true'
+  fi
 }
 
 ## Panubo override some functions
@@ -138,6 +147,7 @@ pg_setup_hba_conf() {
     > "${PGDATA:-/var/lib/postgresql/data}/pg_hba.conf"
 }
 
+# This function is from https://github.com/docker-library/postgres/ with some modifications
 main() {
   # if first arg looks like a flag, assume we want to run postgres server
   if [ "${1:0:1}" = '-' ]; then
@@ -149,12 +159,15 @@ main() {
     # setup data directories and permissions (when run as root)
     docker_create_db_directories
     if [ "$(id -u)" = '0' ]; then
-      # Process entry-init.d files
-      process_entry_init_files
-
       # then restart script as postgres user
       exec gosu postgres "$BASH_SOURCE" "$@"
     fi
+
+    # Process entry-init.d files
+    process_entry_init_files
+
+    # Recheck if the database already exists since it may have been loaded during entry-init.
+    docker_database_exists
 
     # only run initialization on an empty data directory
     if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
@@ -182,6 +195,11 @@ main() {
       echo 'PostgreSQL init process complete; ready for start up.'
       echo
     else
+
+      # Reconfigured postgresql.conf and pg_hba.conf on each start
+      pg_setup_hba_conf
+      postgresql_conf
+
       echo
       echo 'PostgreSQL Database directory appears to contain a database; Skipping initialization'
       echo

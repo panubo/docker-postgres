@@ -61,6 +61,24 @@ If using wal-g with minio the following env vars should be set.
 - `RECOVERY_WALG_S3_PREFIX` - Recovery target, same as `WALG_S3_PREFIX` but the values must NOT match.
 - `RECOVERY_CONTINUE_ON_EXISTING` - Allows recovery even if a cluster has already been initialised, use if you are restoring from a disk snapshot instead of `wal-g backup-fetch ...`
 
+## Scripts
+
+This image ships with some helper scripts
+
+### docker-initdb-run
+
+This scripts helps re-run scripts and sql files in /docker-entrypoint-initdb.d/. You MUST ensure any scripts you intedend to re-run are idempotent otherwise you may damage your system.
+
+Example:
+
+```
+docker-initdb-run /docker-entrypoint-initdb.d/prometheus-exporter.sh
+```
+
+### backup-wal-g
+
+Runs `wal-g backup-push`.
+
 ## Testing
 
 ```

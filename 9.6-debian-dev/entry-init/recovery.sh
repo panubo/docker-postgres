@@ -21,9 +21,9 @@ if [[ -n "${RECOVERY_WALG_S3_PREFIX:-}" ]]; then
   fi
 
   # create recovery-wal-g.json
-  echo "{\"WALG_S3_PREFIX\": \"${RECOVERY_WALG_S3_PREFIX}\"}" > "/recovery-wal-g.json"
+  echo "{\"WALG_S3_PREFIX\": \"${RECOVERY_WALG_S3_PREFIX}\"}" > "/run/postgresql/recovery-wal-g.json"
 
-  cat /recovery-wal-g.json
+  cat /run/postgresql/recovery-wal-g.json
 
   # TODO: this should be able to be skipped if the base backup has already been restored
   if [[ -e "${PGDATA}/PG_VERSION" ]] && [[ "${RECOVERY_CONTINUE_ON_EXISTING:-}" != "true" ]]; then
@@ -36,14 +36,16 @@ if [[ -n "${RECOVERY_WALG_S3_PREFIX:-}" ]]; then
       # export WALG_LOG_LEVEL=DEVEL
       unset WALG_S3_PREFIX
       # TODO: make LATEST configurable
-      wal-g --config=/recovery-wal-g.json backup-fetch "${PGDATA}" LATEST
+      wal-g --config=/run/postgresql/recovery-wal-g.json backup-fetch "${PGDATA}" LATEST
+
+      ls -l "${PGDATA}"
     )
   else
     echo "INFO: performing restore on existing database"
   fi
 
   # For Postgresql 12 and newer these need to be moved to postgres.conf and a recovery.signal file created
-  echo "restore_command = 'echo \"WAL file restoration: %f, %p\" && unset WALG_S3_PREFIX && /usr/local/bin/wal-g --config=/recovery-wal-g.json wal-fetch \"%f\" \"%p\"'" | tee "${PGDATA:-/var/lib/postgres/data}/recovery.conf"
+  echo "restore_command = 'echo \"WAL file restoration: %f, %p\" && unset WALG_S3_PREFIX && /usr/local/bin/wal-g --config=/run/postgresql/recovery-wal-g.json wal-fetch \"%f\" \"%p\"'" | tee "${PGDATA:-/var/lib/postgres/data}/recovery.conf"
   echo "recovery_end_command = 'echo \"WAL file restoration complete\"'" >> "${PGDATA:-/var/lib/postgres/data}/recovery.conf"
 
   echo "Recovery setup script done. Wait for postgres recovery."

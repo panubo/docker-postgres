@@ -6,7 +6,10 @@
 set -e
 
 # Conf
-REPMGR_CONF="/etc/repmgr.conf"
+REPMGR_CONF="/run/postgresql/repmgr.conf"
+
+# If the container is run as non-root /etc/repmgr.conf won't be writable.
+cp /etc/repmgr.conf "${REPMGR_CONF}"
 
 # Variable tests / defaults
 [ "${REPMGR_ENABLED}" == "true" ] || { echo "Info: REPMGR_ENABLED false"; exit 0; }
