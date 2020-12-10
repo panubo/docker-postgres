@@ -6,7 +6,7 @@
 set -e
 
 # Conf
-REPMGR_CONF="/run/postgresql/repmgr.conf"
+REPMGR_CONF="${REPMGR_CONF:-/run/postgresql/repmgr.conf}"
 
 # If the container is run as non-root /etc/repmgr.conf won't be writable.
 cp /etc/repmgr.conf "${REPMGR_CONF}"

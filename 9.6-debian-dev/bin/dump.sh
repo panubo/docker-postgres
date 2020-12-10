@@ -5,7 +5,7 @@
 set -e
 
 # dirs
-BACKUP_PATH=/srv/pg_dump
+BACKUP_PATH="${BACKUP_PATH:-/srv/pg_dump}"
 BACKUP_DIR="${BACKUP_PATH}/$(date +%Y%m%d%H%M%S)"
 
 # checks

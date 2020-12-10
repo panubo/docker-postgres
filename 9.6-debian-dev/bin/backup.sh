@@ -6,17 +6,17 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # dirs
-BACKUP_PATH="/srv/pg_backup"
+BACKUP_PATH="${BACKUP_PATH:-/srv/pg_backup}"
 
 # checks
 [ ! -d "${BACKUP_PATH}" ] && { echo "Error: ${BACKUP_PATH} does not exist"; exit 128; }
 
-psql -U postgres -c "SELECT pg_start_backup('backup', true);"
+psql -U "${POSTGRES_USER:-postgres}" -c "SELECT pg_start_backup('backup', true);"
 
 # Always stop the backup even on failure
 # Trap is later in the script as it is only required if the backup is started successfully
 finish() {
-  psql -U postgres -c "SELECT pg_stop_backup();"
+  psql -U "${POSTGRES_USER:-postgres}" -c "SELECT pg_stop_backup();"
 }
 trap finish EXIT
 
