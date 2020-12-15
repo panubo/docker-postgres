@@ -44,6 +44,8 @@ See https://repmgr.org/docs/4.0/configuration-file-settings.html
 - `POSTGRES_EXPORTER_ENABLED` - when enabled a `postgres_exporter` user is created with appropriate access for the exporter. The user is only created on db init. Run `. /docker-entrypoint-initdb.d/prometheus-exporter.sh` in the container to enable later.
 - `POSTGRES_EXPORTER_PASSWORD` - user password for postgres_exporter, default "password".
 
+**Security:** if an exporter password is NOT set remote connection as the postgres_export role will be rejected, only local socket connections will be possible.
+
 ### Wal-g
 
 [wal-g](https://github.com/wal-g/wal-g)

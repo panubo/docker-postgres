@@ -114,13 +114,19 @@ docker_database_exists() {
 ## Panubo override some functions
 pg_setup_hba_conf() {
 
-  local type_host hostnossl_reject
+  local type_host hostnossl_reject postgres_exporter
   if [[ "${POSTGRES_ENFORCE_SSL}" == "true" ]]; then
     type_host="hostssl"
     hostnossl_reject=""
   else
     type_host="host"
     hostnossl_reject="# "
+  fi
+
+  if [[ -z "${POSTGRES_EXPORTER_PASSWORD:-}" ]]; then
+    postgres_exporter="reject"
+  else
+    postgres_exporter="md5"
   fi
 
   printf "%s\n" \
@@ -132,6 +138,7 @@ pg_setup_hba_conf() {
     "# \"local\" is for Unix domain socket connections only" \
     "local   all             all                                     trust" \
     "${hostnossl_reject}hostnossl all,replication all                all                reject" \
+    "${type_host}    all             postgres_exporter             all            ${postgres_exporter}" \
     "# IPv4 local connections:" \
     "${type_host}    all             all             127.0.0.1/32            md5" \
     "# IPv6 local connections:" \
