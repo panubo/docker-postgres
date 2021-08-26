@@ -1,4 +1,4 @@
-SUBDIRS := 9.6-debian 9.6-debian-dev 11-debian
+SUBDIRS := 9.6-debian 9.6-debian-dev 11-debian 12-debian
 
 .PHONY: build push clean
 
