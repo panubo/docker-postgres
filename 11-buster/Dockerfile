@@ -1,10 +1,9 @@
-# FROM panubo/postgres:11-debian as oldversions
+FROM panubo/postgres:11-buster as oldversions
 
 FROM docker.io/postgres:11-buster
 
 ENV POSTGIS_MAJOR=2.5
-# ENV TIMESCALEDB_VERSION=1.7.4 TIMESCALEDB_SHA256=d0b7a153ff3e02ecf033a869ecdf4286f8610ea76140baa84928fc3a80223e99
-ENV TIMESCALEDB_VERSION=1.6.1 TIMESCALEDB_SHA256=da0f9a6f36195392bbff7346c89a28c42a90762f4f5603443975887f781ecef6
+ENV TIMESCALEDB_VERSION=1.7.4 TIMESCALEDB_SHA256=d0b7a153ff3e02ecf033a869ecdf4286f8610ea76140baa84928fc3a80223e99
 ENV WALG_VERSION=0.2.15 WALG_SHA256=ea33c2341d7bfb203c6948590c29834c013ab06a28c7a2b236a73d906f785c84
 
 # Install some system utils
@@ -76,12 +75,12 @@ COPY entry-init/* /entry-init.d/
 ENTRYPOINT ["/entry.sh", "docker-entrypoint.sh"]
 CMD ["postgres"]
 
-# COPY --from=oldversions /usr/lib/postgresql/11/lib/timescaledb-*.so /usr/lib/postgresql/11/lib/
-# COPY --from=oldversions /usr/share/postgresql/11/extension/timescaledb--*.sql /usr/share/postgresql/11/extension/
+COPY --from=oldversions /usr/lib/postgresql/11/lib/timescaledb-*.so /usr/lib/postgresql/11/lib/
+COPY --from=oldversions /usr/share/postgresql/11/extension/timescaledb--*.sql /usr/share/postgresql/11/extension/
 
-# COPY --from=oldversions /usr/lib/postgresql/11/lib/postgis-*.so /usr/lib/postgresql/11/lib/
-# COPY --from=oldversions /usr/lib/postgresql/11/lib/postgis_topology-*.so /usr/lib/postgresql/11/lib/
-# COPY --from=oldversions /usr/share/postgresql/11/extension/postgis--*.sql /usr/share/postgresql/11/extension/
-# COPY --from=oldversions /usr/share/postgresql/11/extension/postgis_sfcgal--*.sql /usr/share/postgresql/11/extension/
-# COPY --from=oldversions /usr/share/postgresql/11/extension/postgis_tiger_geocoder--*.sql /usr/share/postgresql/11/extension/
-# COPY --from=oldversions /usr/share/postgresql/11/extension/postgis_topology--*.sql /usr/share/postgresql/11/extension/
+COPY --from=oldversions /usr/lib/postgresql/11/lib/postgis-*.so /usr/lib/postgresql/11/lib/
+COPY --from=oldversions /usr/lib/postgresql/11/lib/postgis_topology-*.so /usr/lib/postgresql/11/lib/
+COPY --from=oldversions /usr/share/postgresql/11/extension/postgis--*.sql /usr/share/postgresql/11/extension/
+COPY --from=oldversions /usr/share/postgresql/11/extension/postgis_sfcgal--*.sql /usr/share/postgresql/11/extension/
+COPY --from=oldversions /usr/share/postgresql/11/extension/postgis_tiger_geocoder--*.sql /usr/share/postgresql/11/extension/
+COPY --from=oldversions /usr/share/postgresql/11/extension/postgis_topology--*.sql /usr/share/postgresql/11/extension/
