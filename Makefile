@@ -1,4 +1,4 @@
-SUBDIRS := 9.6-debian 9.6-debian-dev 11-debian 12-debian
+SUBDIRS := 9.6-debian 9.6-debian-dev 11-debian 11-buster 12-debian 9.6-to-12-upgrade
 
 .PHONY: build push clean
 
@@ -13,6 +13,11 @@ push:
 	done
 
 clean:
+	for dir in $(SUBDIRS); do \
+		make TAG=$$dir -C $$dir $(MAKECMDGOALS); \
+	done
+
+tags:
 	for dir in $(SUBDIRS); do \
 		make TAG=$$dir -C $$dir $(MAKECMDGOALS); \
 	done
