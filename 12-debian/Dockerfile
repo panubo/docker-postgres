@@ -2,7 +2,7 @@
 # The timescaledb version doesn't need to mactch the postgres version here
 FROM timescale/timescaledb:latest-pg12 as tools
 
-# FROM panubo/postgres:11-debian as oldversions
+# FROM panubo/postgres:12 as oldversions
 
 FROM docker.io/postgres:12
 

@@ -1,4 +1,4 @@
-FROM panubo/postgres:9.6-debian as oldversions
+FROM panubo/postgres:9.6 as oldversions
 
 FROM docker.io/postgres:9.6
 
