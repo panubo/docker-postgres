@@ -24,9 +24,6 @@ run: .env
 shell:
 	docker run --rm -it --name $(TAG)-shell $(IMAGE):$(TAG) bash
 
-shell:
-	docker run --rm -it --name $(TAG)-shell $(IMAGE):$(TAG) bash
-
 push:
 	docker tag $(IMAGE):$(TAG) $(REGISTRY)/$(IMAGE):$(PG_VERSION_MAJOR)$(TAG_SUFFIX)
 	docker tag $(IMAGE):$(TAG) $(REGISTRY)/$(IMAGE):$(PG_VERSION_MAJOR).$(PG_VERSION_MINOR)$(TAG_SUFFIX)
