@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -Eeo pipefail
+
+# This script reuses functions from the official docker.io/postgres image docker-entrypoint.sh
+
+# Source docker-entrypoint.sh functions
+. /usr/local/bin/docker-entrypoint.sh
+
+# if first arg looks like a flag, assume we want to run pg_upgrade server
+if [ "${1:0:1}" = '-' ]; then
+  set -- pg_upgrade "$@"
+fi
+
+if [ "$1" = 'pg_upgrade' ] && ! _pg_want_help "$@"; then
+  PGDATA="${PGDATANEW}"
+
+  docker_setup_env
+  # setup data directories and permissions (when run as root)
+  docker_create_db_directories
+  if [ "$(id -u)" = '0' ]; then
+    # then restart script as postgres user
+    exec gosu postgres "$BASH_SOURCE" "$@"
+  fi
+
+  # only run initialization on an empty data directory
+  if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
+    docker_verify_minimum_env
+
+    docker_init_database_dir
+    pg_setup_hba_conf
+  fi
+
+  unset PGDATA
+fi
+
+exec "$@"
