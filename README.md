@@ -4,7 +4,7 @@
 
 * `12-buster`, `12.8-buster`, `12.8-2.5.1-buster`, `12-2.5-buster`
 * `12`, `12.8`, `12.8-1.7.4`, `12-1.7`
-* `11-to-12-upgrade`
+* `11-to-12-buster-upgrade`
 * `9.6-to-12-upgrade`
 * `11-buster`, `11.13-buster`, `11.13-1.7.4-buster`, `11-1.7-buster`
 * `11`, `11.13`, `11.13-1.7.4`, `11-1.7`
@@ -19,7 +19,6 @@ images.
 | Image     | PostgeSQL | TimescaleDB | PostGIS | pglogical | Repmgr |
 | --------- | --------- | ----------- | ------- | --------- | ------ |
 | 12-buster | 12        | 2.5.1       | 2.5     | 2.3.3     | x      |
-| 12-debian | 12        | 1.7.4       | 2.5     | 2.3.3     | x      |
 | 11-buster | 11        | 1.7.4       | 2.5     | x         | _latest_ |
 | 11-debian | 11        | 1.7.4       | 2.5     | x         | _latest_ |
 
