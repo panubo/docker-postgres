@@ -3,7 +3,7 @@ IMAGE    := panubo/postgres
 REGISTRY := docker.io
 
 build:
-	docker build --pull -t $(IMAGE):$(TAG) .
+	docker build -t $(IMAGE):$(TAG) .
 
 run:
 	docker run --rm -it --name $(TAG)-run $(IMAGE):$(TAG)

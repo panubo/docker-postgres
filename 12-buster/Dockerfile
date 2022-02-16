@@ -4,7 +4,7 @@ FROM timescale/timescaledb:latest-pg12 as tools
 
 FROM panubo/postgres:12 as oldversions
 
-FROM docker.io/postgres:12.8-buster
+FROM docker.io/postgres:12-buster
 
 ENV POSTGIS_MAJOR=2.5
 ENV TIMESCALEDB_VERSION=2.5.2 TIMESCALEDB_SHA256=b1a20832189c22ce378f009f9a24ef1db61d7131f7f79bde74fdcde87bcf2d7c
