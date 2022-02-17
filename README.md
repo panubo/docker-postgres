@@ -2,6 +2,7 @@
 
 ## Supported tags
 
+* `12-bullseye`, `12.10-bullseye`, `12.10-2.5.2-bullseye`, `12-2.5-bullseye`
 * `12-buster`, `12.8-buster`, `12.8-2.5.2-buster`, `12-2.5-buster`
 * `12`, `12.8`, `12.8-1.7.4`, `12-1.7`
 * `11-to-12-buster-upgrade`
@@ -16,11 +17,12 @@
 These Docker images for PostgreSQL include a few improvements to the official
 images.
 
-| Image     | PostgeSQL | TimescaleDB | PostGIS | pglogical | Repmgr |
-| --------- | --------- | ----------- | ------- | --------- | ------ |
-| 12-buster | 12        | 2.5.2       | 2.5     | 2.3.3     | x      |
-| 11-buster | 11        | 1.7.4       | 2.5     | x         | _latest_ |
-| 11-debian | 11        | 1.7.4       | 2.5     | x         | _latest_ |
+| Image       | PostgeSQL | TimescaleDB  | PostGIS | pglogical | Repmgr |
+| ----------- | --------- | ------------ | ------- | --------- | ------ |
+| 12-bullseye | 12        | 2.5.2        | 2.5.5   | 2.4.1     | x      |
+| 12-buster   | 12        | 1.7.4, 2.5.2 | 2.5     | 2.3.3     | x      |
+| 11-buster   | 11        | 1.7.4        | 2.5     | x         | _latest_ |
+| 11-debian   | 11        | 1.7.4        | 2.5     | x         | _latest_ |
 
 REF:
 
