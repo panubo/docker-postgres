@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-# Default PGHOST to /var/run/postgres to use local socket
-export PGHOST="${PGHOST:-/var/run/postgresql}"
-
-gosu postgres wal-g backup-push "${PGDATA:-/var/lib/postgres/data}"
