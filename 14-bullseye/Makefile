@@ -45,3 +45,12 @@ tags:
 clean:
 	docker rmi $(IMAGE):$(TAG) || true
 	docker rmi $(REGISTRY)/$(IMAGE):$(TAG) || true
+
+_ci_test:
+	true
+
+_ci_version:
+	@echo $(PG_VERSION_MAJOR)$(TAG_SUFFIX)
+	@echo $(PG_VERSION_MAJOR).$(PG_VERSION_MINOR)$(TAG_SUFFIX)
+	@echo $(PG_VERSION_MAJOR).$(PG_VERSION_MINOR)-$(TS_VERSION_MAJOR).$(TS_VERSION_MINOR).$(TS_VERSION_PATCH)$(TAG_SUFFIX)
+	@echo $(PG_VERSION_MAJOR)-$(TS_VERSION_MAJOR).$(TS_VERSION_MINOR)$(TAG_SUFFIX)
