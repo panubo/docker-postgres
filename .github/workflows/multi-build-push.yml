@@ -38,6 +38,7 @@ jobs:
 
       # The values provided to these two AWS steps are always the same for Panubo owned repos
       - name: Configure AWS Credentials
+        if: github.event_name != 'pull_request'
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           role-to-assume: ${{ env.GITHUB_ROLE_ARN }}

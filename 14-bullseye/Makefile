@@ -1,3 +1,4 @@
+SHELL      := /bin/bash
 TAG        := $(shell basename ${PWD})
 IMAGE      := panubo/postgres
 REGISTRY   := quay.io
