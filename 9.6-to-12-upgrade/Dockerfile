@@ -1,6 +1,6 @@
-FROM panubo/postgres:9.6-dev as pgold
+FROM quay.io/panubo/postgres:9.6-dev as pgold
 
-FROM panubo/postgres:12
+FROM quay.io/panubo/postgres:12
 
 COPY --from=pgold /usr/lib/postgresql/9.6/bin /usr/lib/postgresql/9.6/bin
 COPY --from=pgold /usr/lib/postgresql/9.6/lib /usr/lib/postgresql/9.6/lib

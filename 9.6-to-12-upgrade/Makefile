@@ -1,9 +1,9 @@
 TAG      := $(shell basename ${PWD})
 IMAGE    := panubo/postgres
-REGISTRY := docker.io
+REGISTRY := quay.io
 
 build:
-	docker build -t $(IMAGE):$(TAG) .
+	docker build --platform linux/amd64 -t $(IMAGE):$(TAG) .
 
 run:
 	docker run --rm -it --name $(TAG)-run $(IMAGE):$(TAG)

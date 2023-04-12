@@ -1,6 +1,6 @@
 TAG        := $(shell basename ${PWD})
 IMAGE      := panubo/postgres
-REGISTRY   := docker.io
+REGISTRY   := quay.io
 TAG_SUFFIX := -bullseye
 
 PG_VERSION = $(shell docker inspect $(IMAGE):$(TAG) | jq -r '.[0].Config.Env[] | select(match("PG_VERSION"))')
@@ -13,7 +13,7 @@ TS_VERSION_MINOR = $(shell sed -E 's/.*=[0-9]+\.([0-9]+).*/\1/' <<<"$(TS_VERSION
 TS_VERSION_PATCH = $(shell sed -E 's/.*=[0-9]+\.[0-9]+\.([0-9]+).*/\1/' <<<"$(TS_VERSION)")
 
 build:
-	docker build --pull -t $(IMAGE):$(TAG) .
+	docker build --platform linux/amd64 --pull -t $(IMAGE):$(TAG) .
 
 .env:
 	touch .env
@@ -44,3 +44,12 @@ tags:
 clean:
 	docker rmi $(IMAGE):$(TAG) || true
 	docker rmi $(REGISTRY)/$(IMAGE):$(TAG) || true
+
+_ci_test:
+	true
+
+_ci_version:
+	@echo $(PG_VERSION_MAJOR)$(TAG_SUFFIX)
+	@echo $(PG_VERSION_MAJOR).$(PG_VERSION_MINOR)$(TAG_SUFFIX)
+	@echo $(PG_VERSION_MAJOR).$(PG_VERSION_MINOR)-$(TS_VERSION_MAJOR).$(TS_VERSION_MINOR).$(TS_VERSION_PATCH)$(TAG_SUFFIX)
+	@echo $(PG_VERSION_MAJOR)-$(TS_VERSION_MAJOR).$(TS_VERSION_MINOR)$(TAG_SUFFIX)
