@@ -2,14 +2,14 @@
 # The timescaledb version doesn't need to mactch the postgres version here
 FROM timescale/timescaledb:latest-pg12 as tools
 
-FROM panubo/postgres:12 as oldversions
+FROM quay.io/panubo/postgres:12-bullseye as oldversions
 
 FROM docker.io/postgres:12-bullseye
 
 ENV POSTGIS_VERSION=2.5.5 POSTGIS_SHA256=1217a0212aaa143e44831849d1845b198f248923d7e96634219d3369a6ec8714
-ENV TIMESCALEDB_VERSION=2.5.2 TIMESCALEDB_SHA256=b1a20832189c22ce378f009f9a24ef1db61d7131f7f79bde74fdcde87bcf2d7c
+ENV TIMESCALEDB_VERSION=2.9.3 TIMESCALEDB_SHA256=ff0820891646a772aceab19ee0f7da0a5343dc53b9a72c965ab70f723d231d5c
 ENV WALG_VERSION=1.1 WALG_SHA256=c922c46c770fa5edd38bd60bfacdb92d813272d5d6bd2fc83ef57084b9c6c68c
-ENV PGLOGICAL_VERSION=2.4.1-1.bullseye+1
+ENV PGLOGICAL_VERSION=2.4.2-1.bullseye+1
 ENV POSTGRES_INITDB_ARGS="--data-checksum"
 
 # Install some system utils
@@ -76,8 +76,8 @@ RUN set -x \
 # Install pglogical
 RUN set -x \
   && DIR=$(mktemp -d) && cd ${DIR} \
-  && curl -sSf -L https://dl.2ndquadrant.com/default/release/browse/apt/pool/main/2/2ndquadrant-repository-keys/2ndquadrant-repository-keys_0.qa.2021.1-1-1.bullseye+1_all.deb -o 2ndquadrant-repository-keys_0.qa.2021.1-1-1.bullseye+1_all.deb \
-  && dpkg -i 2ndquadrant-repository-keys_0.qa.2021.1-1-1.bullseye+1_all.deb \
+  && curl -sSf -L https://dl.2ndquadrant.com/default/release/browse/apt/pool/main/2/2ndquadrant-repository-keys/2ndquadrant-repository-keys_2023.1-1.bullseye+1_all.deb -o 2ndquadrant-repository-keys_2023.1-1.bullseye+1_all.deb \
+  && dpkg -i 2ndquadrant-repository-keys_2023.1-1.bullseye+1_all.deb \
   && apt-key add /usr/share/2ndquadrant-repository-keys/*.asc \
   && source_list_file="/etc/apt/sources.list.d/2ndquadrant-dl-default-release.list" \
   && echo "deb [arch=$(dpkg --print-architecture)] https://dl.2ndquadrant.com/default/release/apt $(lsb_release -cs)-2ndquadrant main" > "${source_list_file}" \
@@ -101,12 +101,12 @@ CMD ["postgres"]
 
 COPY --from=tools /usr/local/bin/timescaledb-tune /usr/local/bin/timescaledb-parallel-copy /usr/local/bin/
 
-# COPY --from=oldversions /usr/lib/postgresql/12/lib/timescaledb-*.so /usr/lib/postgresql/12/lib/
-# COPY --from=oldversions /usr/share/postgresql/12/extension/timescaledb--*.sql /usr/share/postgresql/12/extension/
+COPY --from=oldversions /usr/lib/postgresql/12/lib/timescaledb-*.so /usr/lib/postgresql/12/lib/
+COPY --from=oldversions /usr/share/postgresql/12/extension/timescaledb--*.sql /usr/share/postgresql/12/extension/
 
-# COPY --from=oldversions /usr/lib/postgresql/12/lib/postgis-*.so /usr/lib/postgresql/12/lib/
-# COPY --from=oldversions /usr/lib/postgresql/12/lib/postgis_topology-*.so /usr/lib/postgresql/12/lib/
-# COPY --from=oldversions /usr/share/postgresql/12/extension/postgis--*.sql /usr/share/postgresql/12/extension/
-# COPY --from=oldversions /usr/share/postgresql/12/extension/postgis_sfcgal--*.sql /usr/share/postgresql/12/extension/
-# COPY --from=oldversions /usr/share/postgresql/12/extension/postgis_tiger_geocoder--*.sql /usr/share/postgresql/12/extension/
-# COPY --from=oldversions /usr/share/postgresql/12/extension/postgis_topology--*.sql /usr/share/postgresql/12/extension/
+COPY --from=oldversions /usr/lib/postgresql/12/lib/postgis-*.so /usr/lib/postgresql/12/lib/
+COPY --from=oldversions /usr/lib/postgresql/12/lib/postgis_topology-*.so /usr/lib/postgresql/12/lib/
+COPY --from=oldversions /usr/share/postgresql/12/extension/postgis--*.sql /usr/share/postgresql/12/extension/
+COPY --from=oldversions /usr/share/postgresql/12/extension/postgis_sfcgal--*.sql /usr/share/postgresql/12/extension/
+COPY --from=oldversions /usr/share/postgresql/12/extension/postgis_tiger_geocoder--*.sql /usr/share/postgresql/12/extension/
+COPY --from=oldversions /usr/share/postgresql/12/extension/postgis_topology--*.sql /usr/share/postgresql/12/extension/
