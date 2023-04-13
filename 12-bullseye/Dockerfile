@@ -6,7 +6,7 @@ FROM quay.io/panubo/postgres:12-bullseye as oldversions
 
 FROM docker.io/postgres:12-bullseye
 
-ENV POSTGIS_VERSION=2.5.5 POSTGIS_SHA256=1217a0212aaa143e44831849d1845b198f248923d7e96634219d3369a6ec8714
+ENV POSTGIS_VERSION=3.1.8 POSTGIS_SHA256=54254fb57070ce44d1da9434f472e0a82df0ef24321c2b9a22c449f756e278e7
 ENV TIMESCALEDB_VERSION=2.9.3 TIMESCALEDB_SHA256=ff0820891646a772aceab19ee0f7da0a5343dc53b9a72c965ab70f723d231d5c
 ENV WALG_VERSION=1.1 WALG_SHA256=c922c46c770fa5edd38bd60bfacdb92d813272d5d6bd2fc83ef57084b9c6c68c
 ENV PGLOGICAL_VERSION=2.4.2-1.bullseye+1
@@ -33,14 +33,14 @@ RUN set -x \
 
 # Install PostGIS extension
 RUN apt-get update \
-  && apt-get -y install build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
+  && apt-get -y install build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev libgeos-dev libsfcgal1 libgdal28 libjson-c5 libproj19 libgeos-c1v5 libprotobuf-c1 protobuf-c-compiler xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
   && DIR=$(mktemp -d) && cd ${DIR} \
   && curl -s -L https://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz -o postgis.tar.gz \
   && sha256sum postgis.tar.gz \
   && echo "${POSTGIS_SHA256} postgis.tar.gz" | sha256sum -c - \
   && tar -xzf postgis.tar.gz --strip-components=1 \
   && ./configure --with-sfcgal && make -j 4 && make install \
-  && apt-get -y remove build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
+  && apt-get -y remove build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev libgeos-dev xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
   && apt-get -y autoremove && apt-get clean \
   && rm -rf /var/lib/apt/lists/* ${DIR} \
   && sed -r -i "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = 'postgis,\2'/;s/,'/'/" /usr/share/postgresql/postgresql.conf.sample \
