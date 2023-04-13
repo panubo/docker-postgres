@@ -10,7 +10,7 @@ ENV POSTGIS_VERSION=3.1.8 POSTGIS_SHA256=54254fb57070ce44d1da9434f472e0a82df0ef2
 ENV TIMESCALEDB_VERSION=2.5.2 TIMESCALEDB_SHA256=b1a20832189c22ce378f009f9a24ef1db61d7131f7f79bde74fdcde87bcf2d7c
 ENV WALG_VERSION=2.0.1 WALG_SHA256=2640cb9110e802bf971efdc9b7a35515af7757e06693bf5c81bd4915d8d42b9c
 ENV PGLOGICAL_VERSION=2.4.2-1.bullseye+1
-ENV POSTGRES_INITDB_ARGS="--data-checksum"
+ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
 # Install some system utils
 RUN apt-get update \
@@ -33,17 +33,17 @@ RUN set -x \
 
 # Install PostGIS extension
 RUN apt-get update \
-  && apt-get -y install build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev protobuf-c-compiler xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
+  && apt-get -y install build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev libgeos-dev libsfcgal1 libgdal28 libjson-c5 libproj19 libgeos-c1v5 libprotobuf-c1 protobuf-c-compiler xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
   && DIR=$(mktemp -d) && cd ${DIR} \
   && curl -s -L https://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz -o postgis.tar.gz \
   && sha256sum postgis.tar.gz \
   && echo "${POSTGIS_SHA256} postgis.tar.gz" | sha256sum -c - \
   && tar -xzf postgis.tar.gz --strip-components=1 \
   && ./configure --with-sfcgal && make -j 4 && make install \
-  && apt-get -y remove build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
+  && apt-get -y remove build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev libgeos-dev xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
   && apt-get -y autoremove && apt-get clean \
   && rm -rf /var/lib/apt/lists/* ${DIR} \
-  && sed -r -i "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = 'postgis,\2'/;s/,'/'/" /usr/share/postgresql/postgresql.conf.sample \
+  && sed -r -i "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = 'postgis-3,\2'/;s/,'/'/" /usr/share/postgresql/postgresql.conf.sample \
   ;
 
 # Build and install TimescaleDB extension
