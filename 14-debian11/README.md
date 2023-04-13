@@ -1,6 +1,6 @@
-# PostgreSQL 12 w/ TimescaleDB
+# PostgreSQL 14 w/ TimescaleDB
 
-This builds upon the offical PostgreSQL 12 image and adds TimescaleDB extensions.
+This builds upon the offical PostgreSQL 14 image and adds TimescaleDB extensions.
 
 ## Environment variables
 
@@ -9,7 +9,7 @@ This builds upon the offical PostgreSQL 12 image and adds TimescaleDB extensions
 - `POSTGRES_PASSWORD`
 - `POSTGRES_USER`
 - `POSTGRES_DB`
-- `POSTGRES_INITDB_ARGS` - Specify any initdb arguments such as "--data-checksum", "--locale=en_AU.UTF-8". Default "--data-checksum" (this image turns on data checksum by default).
+- `POSTGRES_INITDB_ARGS` - Specify any initdb arguments such as "--data-checksums", "--locale=en_AU.UTF-8". Default "--data-checksums" (this image turns on data checksum by default).
 - `POSTGRES_INITDB_WALDIR`
 - `POSTGRES_HOST_AUTH_METHOD` - **DISABLED** this env is used in the postgres upstream image but disabled in this image
 - `PGDATA`
@@ -78,5 +78,5 @@ Runs `wal-g backup-push`.
 ## Testing
 
 ```
-docker run --rm -it --name timescaledb -v $(pwd)/data:/var/lib/postgresql/data --env POSTGRES_HOST_AUTH_METHOD=trust panubo/postgres:12-bullseye
+docker run --rm -it --name timescaledb -v $(pwd)/data:/var/lib/postgresql/data --env POSTGRES_HOST_AUTH_METHOD=trust panubo/postgres:14-debian11
 ```

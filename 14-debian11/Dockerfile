@@ -2,7 +2,7 @@
 # The timescaledb version doesn't need to mactch the postgres version here
 FROM timescale/timescaledb:latest-pg14 as tools
 
-# FROM quay.io/panubo/postgres:14 as oldversions
+# FROM quay.io/panubo/postgres:14-debain11 as oldversions
 
 FROM docker.io/postgres:14-bullseye
 

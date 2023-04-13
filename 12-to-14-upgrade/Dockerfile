@@ -1,6 +1,6 @@
 FROM quay.io/panubo/postgres:12-bullseye as pgold
 
-FROM quay.io/panubo/postgres:14-bullseye
+FROM quay.io/panubo/postgres:14-debian11
 
 COPY --from=pgold /usr/lib/postgresql/12/bin /usr/lib/postgresql/12/bin
 COPY --from=pgold /usr/lib/postgresql/12/lib /usr/lib/postgresql/12/lib

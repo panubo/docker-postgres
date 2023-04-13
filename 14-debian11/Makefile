@@ -2,13 +2,13 @@ SHELL      := /bin/bash
 TAG        := $(shell basename ${PWD})
 IMAGE      := panubo/postgres
 REGISTRY   := quay.io
-TAG_SUFFIX := -bullseye
+TAG_SUFFIX := -debian11
 
-PG_VERSION = $(shell docker inspect $(IMAGE):$(TAG) | jq -r '.[0].Config.Env[] | select(match("PG_VERSION"))')
+PG_VERSION = $(shell docker inspect $(REGISTRY)/$(IMAGE):$(TAG) | jq -r '.[0].Config.Env[] | select(match("PG_VERSION"))')
 PG_VERSION_MAJOR = $(shell sed -E 's/.*=([0-9]+)\..*/\1/' <<<"$(PG_VERSION)")
 PG_VERSION_MINOR = $(shell sed -E 's/.*=[0-9]+\.([0-9]+).*/\1/' <<<"$(PG_VERSION)")
 
-TS_VERSION = $(shell docker inspect $(IMAGE):$(TAG) | jq -r '.[0].Config.Env[] | select(match("TIMESCALEDB_VERSION"))')
+TS_VERSION = $(shell docker inspect $(REGISTRY)/$(IMAGE):$(TAG) | jq -r '.[0].Config.Env[] | select(match("TIMESCALEDB_VERSION"))')
 TS_VERSION_MAJOR = $(shell sed -E 's/.*=([0-9]+)\..*/\1/' <<<"$(TS_VERSION)")
 TS_VERSION_MINOR = $(shell sed -E 's/.*=[0-9]+\.([0-9]+).*/\1/' <<<"$(TS_VERSION)")
 TS_VERSION_PATCH = $(shell sed -E 's/.*=[0-9]+\.[0-9]+\.([0-9]+).*/\1/' <<<"$(TS_VERSION)")

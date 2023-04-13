@@ -4,17 +4,17 @@
 
 Images are available at `quay.io/panubo/postgres` or `public.ecr.aws/panubo/postgres`.
 
-* `12-bullseye`, `12.10-bullseye`, `12.10-2.5.2-bullseye`, `12-2.5-bullseye`
-* `12-buster`, `12.8-buster`, `12.8-2.5.2-buster`, `12-2.5-buster`
-* `12`, `12.8`, `12.8-1.7.4`, `12-1.7`
+* `12-bullseye`, `12.14-bullseye`, `12.14-2.9.3-bullseye`, `12-2.9-bullseye`
 * `9.6-to-12-upgrade`
 * `9.6-dev`, `9.6-1.6-dev`
+
+**All future images will use the OS name and version instead of codenames**
 
 ### Testing tags
 
 These images are being tested.
 
-* `14-bullseye`, `14.7-bullseye`, `14.7-2.5.2-bullseye`, `14-2.5-bullseye`
+* `14-debian11`, `14.7-debian11`, `14.7-2.5.2-debian11`, `14-2.5-debian11`
 
 ## Extensions
 
@@ -24,7 +24,7 @@ images.
 | Image       | PostgeSQL | TimescaleDB  | PostGIS | pglogical |
 | ----------- | --------- | ------------ | ------- | --------- |
 | 12-bullseye | 12        | 2.5.2, 2.9.3 | 2.5.5   | 2.4.1     |
-| 14-bullseye | 14        | 2.5.2        | 3.1.8   | 2.4.2     |
+| 14-debian11 | 14        | 2.5.2        | 3.1.8   | 2.4.2     |
 
 REF:
 

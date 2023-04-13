@@ -19,7 +19,7 @@ jobs:
   build_and_push:
     strategy:
       matrix:
-        version: ["12-bullseye", "14-bullseye"]
+        version: ["12-bullseye", "14-debian11"]
 
     runs-on: ubuntu-latest
     steps:
