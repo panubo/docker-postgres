@@ -86,7 +86,7 @@ jobs:
           cd ${{ matrix.version }}
           delimiter="$(openssl rand -hex 8)"
           echo "image_version<<${delimiter}" >> "${GITHUB_OUTPUT}"
-          make _ci_version TAG=test >> "${GITHUB_OUTPUT}"
+          make _ci_version TAG=test REGISTRY=docker.io >> "${GITHUB_OUTPUT}"  # This Make target inspects the built image. Some additional options are passed in.
           echo "${delimiter}" >> "${GITHUB_OUTPUT}"
 
       - name: Docker meta
