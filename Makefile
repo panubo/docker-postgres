@@ -1,4 +1,4 @@
-SUBDIRS := 12-bullseye 9.6-to-12-upgrade
+SUBDIRS := 14-bullseye 12-bullseye 12-to-14-upgrade 9.6-to-12-upgrade
 
 .PHONY: build push clean
 
