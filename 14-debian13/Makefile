@@ -2,7 +2,7 @@ SHELL      := /bin/bash
 TAG        := $(shell basename ${PWD})
 IMAGE      := panubo/postgres
 REGISTRY   := quay.io
-TAG_SUFFIX := -debian11
+TAG_SUFFIX := -debian13
 
 PG_VERSION = $(shell docker inspect $(REGISTRY)/$(IMAGE):$(TAG) | jq -r '.[0].Config.Env[] | select(match("PG_VERSION"))')
 PG_VERSION_MAJOR = $(shell sed -E 's/.*=([0-9]+)\..*/\1/' <<<"$(PG_VERSION)")
