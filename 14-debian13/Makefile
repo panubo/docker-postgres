@@ -14,7 +14,7 @@ TS_VERSION_MINOR = $(shell sed -E 's/.*=[0-9]+\.([0-9]+).*/\1/' <<<"$(TS_VERSION
 TS_VERSION_PATCH = $(shell sed -E 's/.*=[0-9]+\.[0-9]+\.([0-9]+).*/\1/' <<<"$(TS_VERSION)")
 
 build:
-	docker build --platform linux/amd64 --pull -t $(REGISTRY)/$(IMAGE):$(TAG) .
+	docker build --pull -t $(REGISTRY)/$(IMAGE):$(TAG) .
 
 .env:
 	touch .env

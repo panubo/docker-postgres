@@ -8,7 +8,7 @@ FROM docker.io/postgres:14-trixie
 
 ENV POSTGIS_VERSION=3.1.8 POSTGIS_SHA256=54254fb57070ce44d1da9434f472e0a82df0ef24321c2b9a22c449f756e278e7
 ENV TIMESCALEDB_VERSION=2.5.2 TIMESCALEDB_SHA256=b1a20832189c22ce378f009f9a24ef1db61d7131f7f79bde74fdcde87bcf2d7c
-ENV WALG_VERSION=2.0.1 WALG_SHA256=2640cb9110e802bf971efdc9b7a35515af7757e06693bf5c81bd4915d8d42b9c
+ENV WALG_VERSION=3.0.7 WALG_AMD64_SHA256=76d51ed915165d45314bc947300b9d1776adb2d875d857f580a730fd6f66900e WALG_AARCH64_SHA256=fcf25aac732f66e77e121e9d287a08d8bf867c604b81cb6fcfff2d6c692d38c9
 ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
 # Install some system utils
@@ -55,10 +55,17 @@ RUN set -x \
 # Install WAL-G
 RUN set -x \
   && DIR=$(mktemp -d) && cd ${DIR} \
-  && curl -sSf -L https://github.com/wal-g/wal-g/releases/download/v${WALG_VERSION}/wal-g-pg-ubuntu-20.04-amd64.tar.gz -o wal-g-pg-ubuntu-20.04-amd64.tar.gz \
-  && echo "${WALG_SHA256}  wal-g-pg-ubuntu-20.04-amd64.tar.gz" | sha256sum -c - \
-  && tar -xzf wal-g-pg-ubuntu-20.04-amd64.tar.gz \
-  && cp wal-g-pg-ubuntu-20.04-amd64 /usr/local/bin/wal-g \
+  && if [ "$(uname -m)" = "x86_64" ] ; then \
+  WALG_SHA256="${WALG_AMD64_SHA256}"; \
+  WALG_ARCH="amd64"; \
+  elif [ "$(uname -m)" = "aarch64" ]; then \
+  WALG_SHA256="${WALG_AARCH64_SHA256}"; \
+  WALG_ARCH="aarch64"; \
+  fi \
+  && curl -sSf -L https://github.com/wal-g/wal-g/releases/download/v${WALG_VERSION}/wal-g-pg-ubuntu-22.04-${WALG_ARCH}.tar.gz -o wal-g-pg-ubuntu-22.04-${WALG_ARCH}.tar.gz \
+  && ( echo "${WALG_SHA256} wal-g-pg-ubuntu-22.04-${WALG_ARCH}.tar.gz" | sha256sum -c - || ( echo "Expected $(sha256sum wal-g-pg-ubuntu-22.04-${WALG_ARCH}.tar.gz)"; exit 1; )) \
+  && tar -xzf wal-g-pg-ubuntu-22.04-${WALG_ARCH}.tar.gz \
+  && cp wal-g-pg-ubuntu-22.04-${WALG_ARCH} /usr/local/bin/wal-g \
   && rm -rf ${DIR} \
   ;
 
