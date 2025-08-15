@@ -2,12 +2,11 @@
 # The timescaledb version doesn't need to mactch the postgres version here
 FROM timescale/timescaledb:latest-pg14 AS tools
 
-# FROM quay.io/panubo/postgres:14-debian13 AS oldversions
+FROM quay.io/panubo/postgres:14-debian13 AS oldversions
 
 FROM docker.io/postgres:14-trixie
 
-ENV POSTGIS_VERSION=3.1.8 POSTGIS_SHA256=54254fb57070ce44d1da9434f472e0a82df0ef24321c2b9a22c449f756e278e7
-ENV TIMESCALEDB_VERSION=2.5.2 TIMESCALEDB_SHA256=b1a20832189c22ce378f009f9a24ef1db61d7131f7f79bde74fdcde87bcf2d7c
+ENV TIMESCALEDB_VERSION=2.6.1 TIMESCALEDB_SHA256=226af207105cc9e2d1744b303e475204a947047103f0e5697de4e8949e4dde75
 ENV WALG_VERSION=3.0.7 WALG_AMD64_SHA256=76d51ed915165d45314bc947300b9d1776adb2d875d857f580a730fd6f66900e WALG_AARCH64_SHA256=fcf25aac732f66e77e121e9d287a08d8bf867c604b81cb6fcfff2d6c692d38c9
 ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
@@ -17,22 +16,6 @@ RUN set -x \
   && apt-get -y install procps lsb-release curl apt-transport-https \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
-  ;
-
-# Install PostGIS extension
-RUN set -x \
-  && apt-get update \
-  && apt-get -y install build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev libgeos-dev libsfcgal2 libgdal36 libjson-c5 libproj25 libgeos-c1v5 libprotobuf-c1 protobuf-c-compiler xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
-  && DIR=$(mktemp -d) && cd ${DIR} \
-  && curl -s -L https://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz -o postgis.tar.gz \
-  && sha256sum postgis.tar.gz \
-  && echo "${POSTGIS_SHA256} postgis.tar.gz" | sha256sum -c - \
-  && tar -xzf postgis.tar.gz --strip-components=1 \
-  && ./configure --with-sfcgal && make -j 4 && make install \
-  && apt-get -y remove build-essential libsfcgal-dev libxml2-dev libgdal-dev libproj-dev libjson-c-dev libprotobuf-c-dev libgeos-dev xsltproc docbook-xsl docbook-mathml postgresql-server-dev-${PG_MAJOR} \
-  && apt-get -y autoremove && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* ${DIR} \
-  && sed -r -i "s/[#]*\s*(shared_preload_libraries)\s*=\s*'(.*)'/\1 = 'postgis-3,\2'/;s/,'/'/" /usr/share/postgresql/postgresql.conf.sample \
   ;
 
 # Build and install TimescaleDB extension
@@ -69,6 +52,16 @@ RUN set -x \
   && rm -rf ${DIR} \
   ;
 
+# Install postgis
+RUN set -x \
+  && apt-get update \
+  && apt-get install -y postgresql-${PG_MAJOR}-postgis \
+  && apt-get -y autoremove \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf ${DIR} \
+  ;
+
 # Install pglogical
 RUN set -x \
   && apt-get update \
@@ -102,8 +95,8 @@ CMD ["postgres"]
 
 COPY --from=tools /usr/local/bin/timescaledb-tune /usr/local/bin/timescaledb-parallel-copy /usr/local/bin/
 
-# COPY --from=oldversions /usr/lib/postgresql/14/lib/timescaledb-*.so /usr/lib/postgresql/14/lib/
-# COPY --from=oldversions /usr/share/postgresql/14/extension/timescaledb--*.sql /usr/share/postgresql/14/extension/
+COPY --from=oldversions /usr/lib/postgresql/14/lib/timescaledb-*.so /usr/lib/postgresql/14/lib/
+COPY --from=oldversions /usr/share/postgresql/14/extension/timescaledb--*.sql /usr/share/postgresql/14/extension/
 
 # COPY --from=oldversions /usr/lib/postgresql/14/lib/postgis-*.so /usr/lib/postgresql/14/lib/
 # COPY --from=oldversions /usr/lib/postgresql/14/lib/postgis_topology-*.so /usr/lib/postgresql/14/lib/
