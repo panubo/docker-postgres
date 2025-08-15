@@ -1,4 +1,4 @@
-SUBDIRS := 14-debian11 12-bullseye 12-to-14-upgrade 9.6-to-12-upgrade
+SUBDIRS := 14-debian13
 
 .PHONY: build push clean
 
