@@ -1,5 +1,11 @@
 # PostgreSQL Docker Images
 
+<!-- BEGIN_TOP_PANUBO -->
+> [!IMPORTANT]
+> **Maintained by Panubo** — Cloud Native & SRE Consultants in Sydney.
+> [Work with us →](https://panubo.com.au)
+<!-- END_TOP_PANUBO -->
+
 ## Supported tags
 
 Images are available at `quay.io/panubo/postgres` or `public.ecr.aws/panubo/postgres`.
@@ -54,3 +60,20 @@ docker run --rm -i -v $(DATA_DIR):/var/lib/postgresql -e POSTGRES_PASSWORD=passw
 * The VIEW created by prometheus-exporter can cause pg_upgrade to fail. If this occurs you should remove `postgres_exporter.pg_stat_activity` and re-install post upgrade with `/usr/local/bin/docker-initdb-run /docker-entrypoint-initdb.d/prometheus-exporter.sh`.
 * Postgres images 9.6-dev and 12 have `POSTGRES_INITDB_ARGS="--data-checksum"` by default which will conflict if the source was not using data checksum. You can set `POSTGRES_INITDB_ARGS=""` to avoid the issue during upgrade.
 * The `9.6-to-12-upgrade` image does NOT support timescaledb upgrade.
+
+<!-- BEGIN_BOTTOM_PANUBO -->
+> [!IMPORTANT]
+> ## About Panubo
+>
+> This project is maintained by Panubo, a technology consultancy based in Sydney, Australia. We build reliable, scalable systems and help teams master the cloud-native ecosystem.
+>
+> We are available for hire to help with:
+>
+> * SRE & Operations: Improving system reliability and incident response.
+> * Platform Engineering: Building internal developer platforms that scale.
+> * Kubernetes: Cluster design, security auditing, and migrations.
+> * DevOps: Streamlining CI/CD pipelines and developer experience.
+> * [See our other services](https://panubo.com.au/services)
+>
+> Need a hand with your infrastructure? [Let’s have a chat](https://panubo.com.au/contact) or email us at team@panubo.com.
+<!-- END_BOTTOM_PANUBO -->
